@@ -16,6 +16,7 @@ import random
 from sklearn.model_selection import train_test_split
 from skimage import img_as_ubyte
 from dice_loss import dice_coeff
+import numpy as np
 torch.backends.cudnn.enabled = False
 def acquire_all_patient(dir):
     all_patients = []
@@ -174,7 +175,8 @@ def main():
         model,
         timesteps=args.timesteps
     ).to('cuda:{}'.format(args.cuda_device))#.to(accelerator.device)
-
+    ###Load the large mask to cover the whole cardiac chamber. The corresponding mask is computed from the whole datasetk###
+    ###Perform an OR operation on the same pixel across all images, meaning that if any pixel is 1, it is defined as 1###
     if args.dataset=='CAMUS':
 
         cond_mask = Image.open('cond_mask_camus.png').convert('L')
@@ -182,8 +184,8 @@ def main():
 
         cond_mask=Image.open('cond_mask_RV.png').convert('L')
 
-    #cond_mask is used to cover specific "chamber region",which is  calculated from the full dataset.
-    import numpy as np
+
+
     cond_mask = cond_mask.resize((args.image_size, args.image_size))
     cond_mask=torch.from_numpy(np.array(cond_mask))
     cond_mask = cond_mask.float() / 255
@@ -194,6 +196,8 @@ def main():
     if os.path.isdir(args.load_model_from):
         all_model=os.listdir(args.load_model_from)
         for model_name in all_model:
+            if 'best' not in model_name:
+                continue
             model_path=os.path.join(args.load_model_from,model_name)
 
             modification_time = os.path.getmtime(model_path)
