@@ -202,7 +202,7 @@ def main():
             save_dict = torch.load(args.load_model_from)
             diffusion.load_state_dict(save_dict['model_state_dict'])
             optimizer.load_state_dict(save_dict['optimizer_state_dict'])
-    else:
+    else: #using DDP training mode to accelerate
         local_rank=int(os.environ.get('LOCAL_RANK',-1))
         dist.init_process_group(backend='gloo')
         device=torch.device(f"cuda:{local_rank}")
@@ -246,9 +246,9 @@ def main():
 
         diffusion=torch.nn.parallel.DistributedDataParallel(MedSegDiff(model,timesteps=args.timesteps).to(device),device_ids=[local_rank],output_device=local_rank)
         if args.load_model_from is not None:
-            ###Note: if  the index of GPUs is not same , it would better to assign your pre-trained parameters to cpu then transfer them into GPU.
+            ###Note: if the index of GPUs is not same , it would better to assign your pre-trained parameters to cpu then transfer them into GPU.
             save_dict = torch.load(args.load_model_from,map_location=torch.device('cpu'))['model_state_dict']
-            if True:
+            if True: #remove the prefix of multi-GPUs to suit single GPU
                 for k in list(save_dict.keys()):
                     newkey = k[7:]
                     save_dict[newkey] = save_dict.pop(k)
@@ -263,9 +263,10 @@ def main():
 
 
 
-    import copy
+    import copy 
     min_losses=1
     min_epoch=0
+    #Used to save min_loss model
     for epoch in range(args.epochs):
         running_loss = 0.0
         iteration = 0
@@ -308,7 +309,7 @@ def main():
                         'loss': loss,
                     }, os.path.join(checkpoint_dir, f'state_dict_epoch_{epoch}_loss_{epoch_loss}.pt'))
 
-        if epoch_loss < min_losses:
+        if epoch_loss < min_losses: #save best
 
             former_best_name = os.path.join(checkpoint_dir, f'state_dict_best_epoch_{min_epoch}_loss_{min_losses}.pt')
             min_epoch = copy.deepcopy(epoch)
