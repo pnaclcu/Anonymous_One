@@ -1,4 +1,4 @@
-# SegInpDiff - Denoising Diffusion Probabilistic Models for Simultaneous Echocardiography Image Segmentation and Inpaint and inpainting
+# SegInpDiff - Denoising Diffusion Probabilistic Models for Simultaneous Echocardiography Image Segmentation and inpainting
 
 ___
 
