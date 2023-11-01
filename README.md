@@ -5,11 +5,17 @@ ___
 ---
 ## Repo architecture
 med_seg_diff_pytorch.py contains the whole model architecture including the forward and reverse sampling process.
+
 utils/dataset.py is used to process dataloader.
+
 cross_att.py is the proposed cross attention module in this manuscript.
+
 dice_loss.py is used to compute the dice scores.
+
 driver.py-->training command to transform the original $x_0$ and its corresponding segmentation label into pure Gaussian noise.
+
 sample.py-->sampling command to get inpainting $x_0$ and its corresponding segmentation prediction.
+
 plz see the details in the following introduction.
 
 ## Dataset preparation
