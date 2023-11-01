@@ -12,9 +12,9 @@ cross_att.py is the proposed cross attention module in this manuscript.
 
 dice_loss.py is used to compute the dice scores.
 
-driver.py-->training command to transform the original $x_0$ and its corresponding segmentation label into pure Gaussian noise.
+driver.py-->training command includes the training process, as well as the forward process of transforming the original $x_0$ and its corresponding segmentation label into pure Gaussian noise.
 
-sample.py-->sampling command to get inpainting $x_0$ and its corresponding segmentation prediction.
+sample.py-->sampling command to get inpainting $x_0$ and its corresponding segmentation prediction from pure Gaussian noise.
 
 plz see the details in the following introduction.
 
