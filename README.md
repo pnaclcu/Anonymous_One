@@ -16,6 +16,8 @@ driver.py-->training command includes the training process, as well as the forwa
 
 sample.py-->sampling command to get inpainting $x_0$ and its corresponding segmentation prediction from pure Gaussian noise.
 
+cond_mask_camus.png --> The large mask calculated from the CAMUS dataset. For a pixel, if the value of any segmentation result at the current pixel position is 1, the value of the current pixel is defined as 1. (logical OR operation)
+
 plz see the details in the following introduction.
 
 ## Dataset preparation
